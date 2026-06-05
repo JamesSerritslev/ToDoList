@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Personal project todo list with SQLite",
   "main": "electron/main.js",
-  "author": "James",
+  "author": "James Serritslev <JamesSerritslev@users.noreply.github.com>",
   "scripts": {
     "start": "electron .",
     "postinstall": "electron-rebuild",
@@ -114,6 +114,7 @@
       ],
       "icon": "build/icon.png",
       "category": "Office",
+      "maintainer": "James Serritslev <JamesSerritslev@users.noreply.github.com>",
       "artifactName": "Projects-${version}-linux-${arch}.${ext}",
       "executableName": "projects",
       "synopsis": "Personal project todo list with SQLite",

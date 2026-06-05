@@ -28,8 +28,8 @@ async function main() {
   const pngPath = path.join(buildDir, "icon.png");
   const icoPath = path.join(buildDir, "icon.ico");
 
-  await sharp(Buffer.from(svg)).resize(256, 256).png().toFile(pngPath);
-  await sharp(Buffer.from(svg)).resize(512, 512).png().toFile(path.join(buildDir, "icon-512.png"));
+  // macOS/Linux packaging requires icon.png to be at least 512x512.
+  await sharp(Buffer.from(svg)).resize(512, 512).png().toFile(pngPath);
 
   const sizes = [16, 24, 32, 48, 64, 128, 256];
   const pngBuffers = await Promise.all(
