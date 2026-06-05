@@ -75,14 +75,29 @@ jobs:
           path: dist/*.dmg
           if-no-files-found: error
 
+      - name: Prepare Linux artifacts
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          mkdir -p release-assets
+          echo "dist contents:"
+          ls -la dist
+          appimage=$(find dist -maxdepth 1 -type f \( -name '*.AppImage' -o -name '*.appimage' \) | head -n 1)
+          deb=$(find dist -maxdepth 1 -type f -name '*.deb' | head -n 1)
+          if [ -z "$appimage" ] || [ -z "$deb" ]; then
+            echo "Could not find Linux .AppImage and .deb in dist/"
+            exit 1
+          fi
+          cp "$appimage" release-assets/Projects-linux.AppImage
+          cp "$deb" release-assets/Projects-linux.deb
+          ls -la release-assets
+
       - name: Upload Linux artifacts
         if: runner.os == 'Linux'
         uses: actions/upload-artifact@v4
         with:
           name: Projects-linux
-          path: |
-            dist/*.AppImage
-            dist/*.deb
+          path: release-assets/
           if-no-files-found: error
 
   release:
