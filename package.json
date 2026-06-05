@@ -1,0 +1,134 @@
+{
+  "name": "todo-project",
+  "version": "1.0.0",
+  "description": "Personal project todo list with SQLite",
+  "main": "electron/main.js",
+  "author": "James",
+  "scripts": {
+    "start": "electron .",
+    "postinstall": "electron-rebuild",
+    "generate-icon": "node scripts/generate-icon.js",
+    "build": "npm run generate-icon && electron-builder && node scripts/embed-icon.js",
+    "build:win": "npm run generate-icon && electron-builder --win portable && node scripts/embed-icon.js",
+    "build:win:installer": "npm run generate-icon && electron-builder --win nsis && node scripts/embed-icon.js",
+    "build:mac": "npm run generate-icon && electron-builder --mac",
+    "build:linux": "npm run generate-icon && electron-builder --linux",
+    "embed-icon": "node scripts/embed-icon.js",
+    "shortcut": "powershell -ExecutionPolicy Bypass -File scripts/create-shortcut.ps1",
+    "seed:bandsscope": "electron scripts/seed-bandsscope.js",
+    "seed:bandsscope-notes": "electron scripts/seed-bandsscope-notes.js",
+    "seed:projects": "electron scripts/seed-projects.js",
+    "migrate:db": "electron scripts/migrate-db.js"
+  },
+  "build": {
+    "appId": "com.todo.project",
+    "productName": "Projects",
+    "afterPack": "scripts/after-pack.js",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**/*",
+      "src/**/*",
+      "build/icon.png",
+      "build/icon.ico",
+      "project-paths.json",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "build/icon.png",
+        "to": "build/icon.png"
+      },
+      {
+        "from": "build/icon.ico",
+        "to": "build/icon.ico"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "executableName": "Projects",
+      "signAndEditExecutable": false
+    },
+    "portable": {
+      "artifactName": "Projects-Portable.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "Projects",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png",
+      "category": "public.app-category.productivity",
+      "artifactName": "Projects-${version}-mac-${arch}.${ext}",
+      "identity": null,
+      "gatekeeperAssess": false
+    },
+    "dmg": {
+      "artifactName": "Projects-${version}-mac-${arch}.${ext}"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png",
+      "category": "Office",
+      "artifactName": "Projects-${version}-linux-${arch}.${ext}",
+      "executableName": "projects",
+      "synopsis": "Personal project todo list with SQLite",
+      "description": "Local-first project todo list with tasks, notes, and SQLite storage."
+    }
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^4.0.4",
+    "electron": "^35.1.2",
+    "electron-builder": "^25.1.8",
+    "rcedit": "^5.0.2",
+    "sharp": "^0.33.5",
+    "to-ico": "^1.1.5"
+  }
+}

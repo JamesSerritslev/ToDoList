@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'" />
+  <title>Projects</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="window-drag-bar drag-region" aria-hidden="true"></div>
+  <div id="app">
+    <!-- Home View -->
+    <div id="home-view" class="view active">
+      <header class="header drag-region">
+        <div class="header-content">
+          <h1>Projects</h1>
+          <button id="new-project-btn" class="btn btn-accent">+ New Project</button>
+        </div>
+        <p class="subtitle">Your project directories</p>
+      </header>
+      <div id="projects-list" class="view-scroll"></div>
+      <footer class="home-footer">
+        <button id="guide-btn" class="btn-guide" type="button">Guide</button>
+        <button id="readme-btn" class="btn-readme" type="button">README</button>
+      </footer>
+    </div>
+
+    <!-- Project View -->
+    <div id="project-view" class="view">
+      <header class="header drag-region">
+        <div class="header-content">
+          <button id="back-btn" class="btn btn-ghost">← Back</button>
+          <h2 id="project-title"></h2>
+        </div>
+      </header>
+
+      <div class="view-scroll">
+      <section class="section">
+        <h3 class="section-label done-label">Done</h3>
+        <div id="done-list" class="task-list"></div>
+      </section>
+
+      <div class="divider"></div>
+
+      <section class="section">
+        <h3 class="section-label todo-label">To Do</h3>
+        <div id="todo-list" class="task-list"></div>
+      </section>
+
+      <div class="input-bar field-wrap">
+        <textarea
+          id="task-input"
+          class="field-textarea"
+          placeholder="Type a task and press Enter…"
+          autocomplete="off"
+          spellcheck="false"
+          rows="1"
+        ></textarea>
+      </div>
+
+      <div class="input-bar field-wrap">
+        <textarea
+          id="notes-input"
+          class="field-textarea"
+          placeholder="Type a note and press Shift+Enter…"
+          spellcheck="false"
+          rows="1"
+        ></textarea>
+      </div>
+
+      <div id="notes-list" class="notes-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- New project modal -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+      <h3>New Project</h3>
+      <input id="project-name-input" type="text" placeholder="Project name" autocomplete="off" />
+      <div class="modal-actions">
+        <button id="modal-cancel" class="btn btn-ghost">Cancel</button>
+        <button id="modal-create" class="btn btn-accent">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- README modal -->
+  <div id="readme-overlay" class="modal-overlay hidden">
+    <div class="modal modal-readme">
+      <h3>README</h3>
+      <div class="readme-body">
+        <p class="readme-lead">
+          Built in one day — mostly from a single well-thought-out Cursor prompt — by
+          <strong>Jame Serritslev</strong>, with follow-up passes on the interactive tour and polish.
+        </p>
+
+        <h4>Downloads</h4>
+        <ul>
+          <li><strong>Windows</strong> — <code>Projects-Portable.exe</code> (portable) or NSIS installer via <code>npm run build:win:installer</code></li>
+          <li><strong>macOS</strong> — <code>.dmg</code> and <code>.zip</code> (Intel + Apple Silicon)</li>
+          <li><strong>Linux</strong> — <code>.AppImage</code> and <code>.deb</code> (x64)</li>
+          <li>GitHub Actions builds all three platforms; tag <code>v*</code> to publish release artifacts</li>
+        </ul>
+
+        <h4>Tech stack</h4>
+        <ul>
+          <li><strong>Electron 35</strong> — frameless desktop shell (Windows, macOS, Linux)</li>
+          <li><strong>Vanilla JS / HTML / CSS</strong> — no React or bundler in the renderer</li>
+          <li><strong>better-sqlite3</strong> — local SQLite with WAL journaling</li>
+          <li><strong>electron-builder</strong> — cross-platform packaging</li>
+        </ul>
+
+        <h4>Architecture</h4>
+        <ul>
+          <li><code>electron/main.js</code> — BrowserWindow, IPC handlers, DB init, single-instance lock</li>
+          <li><code>electron/preload.js</code> — <code>contextBridge</code> exposes <code>window.api</code>; renderer has no Node access</li>
+          <li><code>src/app.js</code> — projects, tasks, notes, drag reorder, keyboard-first input</li>
+          <li><code>src/guide-tour.js</code> — hands-on tutorial with spotlight overlays and step locks</li>
+          <li><code>electron/db.js</code> — schema for projects, tasks (<code>is_done</code> + <code>position</code>), and project notes</li>
+        </ul>
+
+        <h4>Data &amp; security</h4>
+        <ul>
+          <li>Database: <code>tasks.db</code> in the app data folder (<code>%APPDATA%\Projects</code> on Windows, <code>~/Library/Application Support/Projects</code> on macOS, <code>~/.config/Projects</code> on Linux)</li>
+          <li>Strict CSP (<code>default-src 'self'</code>), context isolation, no outbound network calls</li>
+        </ul>
+
+        <h4>Development</h4>
+        <ul>
+          <li><code>npm start</code> — run locally</li>
+          <li><code>npm run build</code> — build for the current OS</li>
+          <li><code>npm run build:win</code> / <code>build:mac</code> / <code>build:linux</code> — platform-specific builds</li>
+          <li><code>project-paths.json</code> — maps project names to folders for Open in Cursor</li>
+          <li><code>scripts/</code> — icon generation, DB migration, seed utilities</li>
+        </ul>
+      </div>
+      <div class="modal-actions">
+        <button id="readme-close" class="btn btn-accent" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive tour -->
+  <div id="tour-overlay" class="tour-overlay hidden">
+    <div class="tour-backdrop"></div>
+    <svg id="tour-mask" class="tour-mask hidden" aria-hidden="true">
+      <defs>
+        <mask id="tour-spotlight-mask" maskUnits="userSpaceOnUse">
+          <rect id="tour-mask-fill" fill="white"></rect>
+        </mask>
+      </defs>
+      <rect id="tour-mask-dim" fill="#000" opacity="0.36" mask="url(#tour-spotlight-mask)"></rect>
+    </svg>
+    <div id="tour-spotlight" class="tour-spotlight hidden"></div>
+    <button id="tour-skip-float" class="btn btn-ghost tour-skip-float" type="button">Skip tour</button>
+    <div id="tour-card" class="tour-card tour-card-centered">
+      <h3 id="tour-title">Welcome</h3>
+      <p id="tour-message"></p>
+      <div class="tour-actions">
+        <button id="tour-next" class="btn btn-accent" type="button">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script src="guide-tour.js"></script>
+</body>
+</html>
