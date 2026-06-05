@@ -23,7 +23,7 @@
   "build": {
     "appId": "com.todo.project",
     "productName": "Projects",
-    "publish": "never",
+    "generateUpdatesFilesForAllChannels": false,
     "afterPack": "scripts/after-pack.js",
     "directories": {
       "output": "dist"
@@ -80,23 +80,16 @@
             "x64",
             "arm64"
           ]
-        },
-        {
-          "target": "zip",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
         }
       ],
       "icon": "build/icon.png",
       "category": "public.app-category.productivity",
-      "artifactName": "Projects-${version}-mac-${arch}.${ext}",
+      "artifactName": "Projects-mac-${arch}.${ext}",
       "identity": null,
       "gatekeeperAssess": false
     },
     "dmg": {
-      "artifactName": "Projects-${version}-mac-${arch}.${ext}"
+      "artifactName": "Projects-mac-${arch}.${ext}"
     },
     "linux": {
       "target": [
@@ -116,7 +109,7 @@
       "icon": "build/icon.png",
       "category": "Office",
       "maintainer": "James Serritslev <JamesSerritslev@users.noreply.github.com>",
-      "artifactName": "Projects-${version}-linux-${arch}.${ext}",
+      "artifactName": "Projects-linux-${ext}",
       "executableName": "projects",
       "synopsis": "Personal project todo list with SQLite",
       "description": "Local-first project todo list with tasks, notes, and SQLite storage."
