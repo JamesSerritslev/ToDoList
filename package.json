@@ -8,11 +8,11 @@
     "start": "electron .",
     "postinstall": "electron-rebuild",
     "generate-icon": "node scripts/generate-icon.js",
-    "build": "npm run generate-icon && electron-builder && node scripts/embed-icon.js",
-    "build:win": "npm run generate-icon && electron-builder --win portable && node scripts/embed-icon.js",
-    "build:win:installer": "npm run generate-icon && electron-builder --win nsis && node scripts/embed-icon.js",
-    "build:mac": "npm run generate-icon && electron-builder --mac",
-    "build:linux": "npm run generate-icon && electron-builder --linux",
+    "build": "npm run generate-icon && electron-builder --publish never && node scripts/embed-icon.js",
+    "build:win": "npm run generate-icon && electron-builder --win portable --publish never && node scripts/embed-icon.js",
+    "build:win:installer": "npm run generate-icon && electron-builder --win nsis --publish never && node scripts/embed-icon.js",
+    "build:mac": "npm run generate-icon && electron-builder --mac --publish never",
+    "build:linux": "npm run generate-icon && electron-builder --linux --publish never",
     "embed-icon": "node scripts/embed-icon.js",
     "shortcut": "powershell -ExecutionPolicy Bypass -File scripts/create-shortcut.ps1",
     "seed:bandsscope": "electron scripts/seed-bandsscope.js",
@@ -23,6 +23,7 @@
   "build": {
     "appId": "com.todo.project",
     "productName": "Projects",
+    "publish": "never",
     "afterPack": "scripts/after-pack.js",
     "directories": {
       "output": "dist"

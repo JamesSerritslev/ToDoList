@@ -20,12 +20,12 @@ jobs:
             artifact_glob: |
               dist/Projects-Portable.exe
           - os: macos-latest
-            build: npx electron-builder --mac
+            build: npx electron-builder --mac --publish never
             artifact_glob: |
               dist/Projects-*-mac-*.dmg
               dist/Projects-*-mac-*.zip
           - os: ubuntu-latest
-            build: npx electron-builder --linux
+            build: npx electron-builder --linux --publish never
             artifact_glob: |
               dist/Projects-*-linux-*.AppImage
               dist/Projects-*-linux-*.deb
